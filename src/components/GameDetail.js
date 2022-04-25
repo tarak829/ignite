@@ -2,44 +2,66 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { smallImage } from "../util";
 
-const GameDetail = () => {
-  const { screen, game } = useSelector((state) => state.detail);
+const GameDetail = ({ pathId }) => {
+  const { screen, game, isLoading } = useSelector((state) => state.detail);
+
+  const navigate = useNavigate();
+
+  //Exit Detail
+  const exitDetailHandler = (e) => {
+    const element = e.target;
+    if (element.classList.contains("shadow")) {
+      document.body.style.overflow = "auto";
+      navigate("/");
+    }
+  };
 
   return (
-    <CardShadow>
-      <Detail>
-        <div className='stats'>
-          <div className='rating'>
-            <h3>{game.name}</h3>
-            <p>Rating: {game.rating}</p>
-          </div>
-          <div className='info'>
-            <h3>Platforms</h3>
-            <div className='platforms'>
-              {game.platforms.map((data) => {
-                return <h3 key={data.platform.id}>{data.platform.name}</h3>;
+    <>
+      {!isLoading && (
+        <CardShadow className='shadow' onClick={exitDetailHandler}>
+          <Detail layoutId={pathId}>
+            <Stats>
+              <div className='rating'>
+                <motion.h3 layoutId={`title ${pathId}`}>{game.name}</motion.h3>
+                <p>Rating: {game.rating}</p>
+              </div>
+              <Info>
+                <h3>Platforms</h3>
+                <Platforms>
+                  {game.platforms.map((data) => {
+                    return <h3 key={data.platform.id}>{data.platform.name}</h3>;
+                  })}
+                </Platforms>
+              </Info>
+            </Stats>
+            <Media>
+              <motion.img
+                layoutId={`image ${pathId}`}
+                src={smallImage(game.background_image, 1280)}
+                alt='game_background'
+              />
+            </Media>
+            <Description>
+              <p>{game.description_raw}</p>
+            </Description>
+            <div className='gallery'>
+              {screen.results.map((screen) => {
+                return <img src={smallImage(screen.image, 1280)} key={screen.id} alt='game_screenshot' />;
               })}
             </div>
-          </div>
-        </div>
-        <div className='media'>
-          <img src={game.background_image} alt="game_background" />
-        </div>
-        <div className='description'>
-          <p>{game.description_raw}</p>
-        </div>
-        <div className='gallery'>
-          {screen.results.map((screen) => {
-            return <img src={screen.image} key={screen.id} alt="game_screenshot" />;
-          })}
-        </div>
-      </Detail>
-    </CardShadow>
+          </Detail>
+        </CardShadow>
+      )}
+    </>
   );
 };
 
 const CardShadow = styled(motion.div)`
+  z-index: 5;
   width: 100%;
   min-height: 100vh;
   overflow-y: scroll;
@@ -62,16 +84,49 @@ const CardShadow = styled(motion.div)`
 `;
 
 const Detail = styled(motion.div)`
+  z-index: 10;
   width: 80%;
   border-radius: 10px;
-  padding: 2rem 20rem;
+  padding: 2rem 5rem;
   background: #fff;
   position: absolute;
   left: 10%;
   color: #000;
-  img{
+  img {
     width: 100%;
   }
+`;
+
+const Stats = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Info = styled(motion.div)`
+  text-align: center;
+`;
+
+const Platforms = styled(motion.div)`
+  display: flex;
+  justify-content: space-evenly;
+  img {
+    margin-left: 3rem;
+  }
+`;
+
+const Media = styled(motion.div)`
+  margin-top: 5rem;
+  img {
+    width: 100%;
+    /* height: 75vh;
+    object-fit: cover;
+    object-position: top; */
+  }
+`;
+
+const Description = styled(motion.div)`
+  margin: 5rem 0;
 `;
 
 export default GameDetail;

@@ -3,6 +3,10 @@ const { popularGamesURL, upcomingGamesURL, newGamesURL } = require("../api");
 
 export const loadGames = () => async (dispatch) => {
   try {
+    dispatch({
+      type: "LOADING_GAMES",
+    });
+
     const popularData = await axios.get(popularGamesURL());
     const newGamesData = await axios.get(newGamesURL());
     const upcomingData = await axios.get(upcomingGamesURL());
