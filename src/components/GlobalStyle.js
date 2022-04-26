@@ -52,6 +52,10 @@ const GlobalStyle = createGlobalStyle`
     button {
         cursor: pointer;
     }
+    input{
+        font-weight: bold;
+        font-family: "Montserrat", sans-serif;
+    }
 `;
 
 export default GlobalStyle;
