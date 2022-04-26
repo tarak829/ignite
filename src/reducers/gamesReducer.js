@@ -28,6 +28,18 @@ const gamesReducer = (state = inititalState, { type, payload }) => {
         error: payload.error,
         loading: false,
       };
+    case "SEARCH_GAMES":
+      return {
+        ...state,
+        searched: payload.searched,
+        loading: false,
+      };
+    case "CLEAR_SEARCH":
+      return {
+        ...state,
+        searched: [],
+        loading: false,
+      };
     default:
       return {
         ...state,

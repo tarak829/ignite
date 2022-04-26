@@ -12,6 +12,7 @@ import Android from "../img/android.svg";
 import Windows from "../img/windows.svg";
 import Linux from "../img/linux.svg";
 import Gamepad from "../img/gamepad.svg";
+import Chrome from "../img/chrome.svg";
 import Nintendo from "../img/nintendo.svg";
 import halfStar from "../img/star-half.svg";
 import fullStar from "../img/star.svg";
@@ -40,15 +41,23 @@ const GameDetail = ({ pathId }) => {
     if (platformList.includes("PlayStation 4") && platformList.includes("PlayStation 5")) {
       platformList.splice(platformList.indexOf("PlayStation 4"), 1);
     }
+    // check if playstation 4 and playstation 5 are in the list
+    if (platformList.includes("PlayStation 4") && platformList.includes("PlayStation 3")) {
+      platformList.splice(platformList.indexOf("PlayStation 3"), 1);
+    }
     // check if Xbox Series S/X and Xbox One are in the list
     if (platformList.includes("Xbox Series S/X") && platformList.includes("Xbox One")) {
       platformList.splice(platformList.indexOf("Xbox Series S/X"), 1);
+    }
+    // check if Xbox Series S/X and Xbox One are in the list
+    if (platformList.includes("Xbox 360") && platformList.includes("Xbox One")) {
+      platformList.splice(platformList.indexOf("Xbox 360"), 1);
     }
     // check if Nintendo Switch and Nintendo 3DS are in the list
     if (platformList.includes("Nintendo Switch") && platformList.includes("Nintendo 3DS")) {
       platformList.splice(platformList.indexOf("Nintendo 3DS"), 1);
     }
-
+    console.log(platformList);
     return platformList;
   };
 
@@ -68,11 +77,15 @@ const GameDetail = ({ pathId }) => {
 
   const getPlatform = (platform) => {
     switch (platform) {
+      case "PlayStation 3":
+        return PlayStation;
       case "PlayStation 4":
         return PlayStation;
       case "PlayStation 5":
         return PlayStation;
       case "Xbox One":
+        return Xbox;
+      case "Xbox 360":
         return Xbox;
       case "Xbox Series S/X":
         return Xbox;
@@ -90,6 +103,8 @@ const GameDetail = ({ pathId }) => {
         return Android;
       case "PC":
         return Windows;
+      case "Web":
+        return Chrome;
       default:
         return Gamepad;
     }

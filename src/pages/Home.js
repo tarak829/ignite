@@ -10,10 +10,11 @@ import GameDetail from "../components/GameDetail";
 import { useLocation } from "react-router-dom";
 import { css } from "@emotion/react";
 import PuffLoader from "react-spinners/PuffLoader";
+import { fadeIn } from "../animations";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { popular, upcoming, newGames, loading } = useSelector((state) => state.games); // get the games from the store
+  const { popular, upcoming, newGames, loading, searched } = useSelector((state) => state.games); // get the games from the store
 
   const location = useLocation();
   const pathId = location.pathname.split("/")[2];
@@ -27,9 +28,25 @@ const Home = () => {
       {loading ? (
         <PuffLoader color='orangered' loading={loading} css={override} size={150} />
       ) : (
-        <GameList>
+        <GameList variants={fadeIn} initial='hidden' animate='show'>
           <AnimateSharedLayout>
             <AnimatePresence>{pathId && <GameDetail pathId={pathId} />}</AnimatePresence>
+            {searched.length > 0 && (
+              <div className='searched'>
+                <h2>Searched Games</h2>
+                <Games>
+                  {searched.map((game) => (
+                    <Game
+                      key={game.id}
+                      id={game.id}
+                      name={game.name}
+                      released={game.released}
+                      image={game.background_image}
+                    />
+                  ))}
+                </Games>
+              </div>
+            )}
             <h2>Upcoming Games</h2>
             <Games>
               {upcoming.map((game) => (

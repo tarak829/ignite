@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../img/logo.svg";
 //style
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { searchGames } from "../actions/gameAction";
+import { fadeIn } from "../animations";
 
 const Nav = () => {
-  function createRipple(e) {
+  const [textInput, setTextInput] = useState("");
+  const dispatch = useDispatch();
+
+  const createRipple = (e) => {
+    e.preventDefault();
     let btn = e.target;
     let boundingBox = btn.getBoundingClientRect();
     let x = e.clientX - boundingBox.left;
@@ -21,18 +28,31 @@ const Nav = () => {
     ripple.addEventListener("animationend", () => {
       ripple.remove();
     });
-  }
+
+    dispatch(searchGames(textInput));
+    setTextInput("");
+  };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setTextInput(e.target.value);
+    console.log(textInput);
+  };
+
+  const clearSearch = () => {
+    dispatch({ type: "CLEAR_SEARCH" });
+  };
 
   return (
-    <StyledNav>
-      <Logo>
+    <StyledNav variants={fadeIn} initial="hidden" animate="show">
+      <Logo onClick={clearSearch}>
         <img src={logo} alt='logo' />
         <h1>Ignite</h1>
       </Logo>
-      <div className='search'>
-        <input type='text' />
+      <form className='search'>
+        <input value={textInput} onChange={handleChange} type='text' />
         <button onClick={createRipple}>Search</button>
-      </div>
+      </form>
     </StyledNav>
   );
 };

@@ -1,5 +1,5 @@
 const { default: axios } = require("axios");
-const { popularGamesURL, upcomingGamesURL, newGamesURL } = require("../api");
+const { popularGamesURL, upcomingGamesURL, newGamesURL, searchGameURL } = require("../api");
 
 export const loadGames = () => async (dispatch) => {
   try {
@@ -27,3 +27,26 @@ export const loadGames = () => async (dispatch) => {
     });
   }
 };
+
+export const searchGames = (searchTerm) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "LOADING_GAMES",
+    });
+
+    const searchData = await axios.get(searchGameURL(searchTerm));
+    dispatch({
+      type: "SEARCH_GAMES",
+      payload: {
+        searched: searchData.data.results,
+      },
+    });
+  } catch (error) {
+    dispatch({
+      type: "FETCH_GAMES_ERROR",
+      payload: {
+        error: error.message,
+      },
+    });
+  }
+}
